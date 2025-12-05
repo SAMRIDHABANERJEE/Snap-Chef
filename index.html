@@ -3,58 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SnapChef | Reduce Waste, Eat Well</title>
+    <title>SnapChef | Fridge & Menu Scanner</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
     
     <style>
-        /* --- CUSTOM THEME SETUP --- */
+        /* --- THEME SETUP --- */
         :root {
             --primary-green: #059669;
-            --cream-bg: #FAFAF9;
+            --cream-bg: #F5F5F4;
             --dark-text: #1C1917;
         }
         body {
             background-color: var(--cream-bg);
             font-family: 'DM Sans', sans-serif;
             color: var(--dark-text);
+            -webkit-font-smoothing: antialiased;
         }
         h1, h2, h3, h4 {
             font-family: 'Playfair Display', serif;
         }
         
-        /* Animation: Fade In Up */
-        .fade-in {
-            animation: fadeInUp 0.8s ease-out forwards;
+        /* Animations */
+        .fade-up {
+            animation: fadeUp 0.6s ease-out forwards;
             opacity: 0;
             transform: translateY(20px);
         }
-        @keyframes fadeInUp {
+        @keyframes fadeUp {
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Animation: Scanning Line */
-        .scanning-line {
+        .scanning-beam {
             width: 100%;
-            height: 3px;
-            background: #10B981;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #34D399, transparent);
             position: absolute;
             top: 0;
             left: 0;
-            animation: scan 2s infinite linear;
-            box-shadow: 0 0 10px #10B981;
+            animation: beam 2s infinite ease-in-out;
+            box-shadow: 0 0 15px rgba(52, 211, 153, 0.6);
             z-index: 50;
         }
-        @keyframes scan {
+        @keyframes beam {
             0% { top: 0%; opacity: 0; }
-            20% { opacity: 1; }
-            80% { opacity: 1; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
             100% { top: 100%; opacity: 0; }
         }
 
-        /* Utility: Hide Scrollbar */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
@@ -62,81 +61,85 @@
 <body class="min-h-screen flex flex-col selection:bg-emerald-200">
 
     <!-- NAVIGATION -->
-    <nav class="w-full px-6 py-4 flex justify-between items-center bg-white/80 backdrop-blur-md sticky top-0 z-40 border-b border-stone-200">
-        <div class="flex items-center gap-2 text-emerald-700">
-            <!-- Icon -->
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-            <span class="text-xl font-bold tracking-tight">SnapChef</span>
+    <nav class="w-full px-6 py-4 flex justify-between items-center bg-white/90 backdrop-blur-md sticky top-0 z-40 border-b border-stone-200 shadow-sm">
+        <div class="flex items-center gap-2 text-emerald-800">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+            <span class="text-2xl font-bold tracking-tight">SnapChef</span>
         </div>
-        <div class="hidden md:block text-sm font-medium text-stone-500">Eco-Kitchen Intelligence</div>
+        <div class="hidden md:block text-xs font-bold uppercase tracking-widest text-stone-400">Fridge & Menu Decoder</div>
     </nav>
 
     <!-- MAIN CONTENT -->
-    <main class="flex-grow container mx-auto px-4 py-10 max-w-4xl">
+    <main class="flex-grow container mx-auto px-4 py-8 max-w-5xl">
         
-        <!-- Header -->
-        <header class="text-center mb-10">
-            <h1 class="text-4xl md:text-6xl font-bold mb-4 text-emerald-900 leading-tight">Don't waste it. <br><span class="text-emerald-600">Taste it.</span></h1>
-            <p class="text-lg text-stone-600 max-w-xl mx-auto">Upload a photo of your fridge. Our AI identifies ingredients, prioritizes what's expiring, and creates recipes instantly.</p>
+        <!-- HEADER -->
+        <header class="text-center mb-10 mt-4">
+            <h1 class="text-4xl md:text-6xl font-bold mb-5 text-stone-900 leading-tight">
+                Smart Food Analysis.
+                <br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-500">Zero Waste. Better Choices.</span>
+            </h1>
+            <p class="text-lg text-stone-600 max-w-2xl mx-auto">
+                Scan your <strong class="text-emerald-700">fridge</strong> to build recipes, or scan a <strong class="text-emerald-700">restaurant menu</strong> to find the healthiest options instantly.
+            </p>
         </header>
 
-        <!-- UPLOAD SECTION (FIXED FOR GITHUB PAGES) -->
-        <!-- We use an onclick handler on the div to trigger the hidden input -->
-        <div id="upload-container" onclick="triggerUpload()" class="bg-white rounded-3xl shadow-xl border-2 border-dashed border-stone-300 p-12 text-center hover:border-emerald-500 hover:shadow-2xl transition-all cursor-pointer relative overflow-hidden group">
+        <!-- UPLOAD SECTION (The "Bulletproof" Version) -->
+        <!-- The input is ABSOLUTE positioned over the div. Clicking anywhere hits the input. -->
+        <div class="relative bg-white rounded-3xl shadow-xl border-2 border-dashed border-stone-300 hover:border-emerald-500 hover:shadow-2xl transition-all duration-300 group overflow-hidden max-w-2xl mx-auto">
             
-            <!-- The actual input is hidden. We trigger it via JS -->
-            <input type="file" id="file-input" class="hidden" accept="image/*">
-            
-            <!-- UI State: Default -->
-            <div id="upload-ui" class="group-hover:scale-105 transition-transform duration-300 pointer-events-none">
-                <div class="bg-emerald-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-5 text-emerald-600 border border-emerald-100 shadow-sm">
-                    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+            <!-- 1. THE ACTUAL INPUT (Invisible Overlay) -->
+            <!-- z-50 ensures it is on top of everything. w-full h-full covers the whole box. -->
+            <input type="file" id="file-input" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-50" accept="image/*">
+
+            <!-- 2. THE VISUAL UI (Underneath) -->
+            <div id="upload-ui" class="p-16 text-center transition-transform duration-300 group-hover:scale-105">
+                <div class="bg-emerald-50 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 text-emerald-600 border border-emerald-100 shadow-sm">
+                    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                 </div>
-                <h3 class="text-2xl font-semibold text-stone-800">Upload Fridge Photo</h3>
-                <p class="text-stone-500 mt-2 font-medium">Tap to browse or drag & drop</p>
+                <h3 class="text-2xl font-bold text-stone-800">Tap to Scan</h3>
+                <p class="text-stone-500 mt-2 font-medium">Upload Fridge Photo OR Restaurant Menu</p>
+                <div class="mt-6 inline-block bg-stone-100 text-stone-600 text-xs font-bold px-4 py-2 rounded-full">
+                    Supports JPG, PNG, WEBP
+                </div>
             </div>
 
-            <!-- UI State: Scanning (Hidden Initially) -->
-            <div id="preview-container" class="hidden absolute inset-0 bg-stone-900 z-20 pointer-events-none">
-                <!-- The User's Image -->
-                <img id="preview-image" src="" class="w-full h-full object-cover opacity-50" alt="Fridge Content">
-                
-                <!-- Scanning Animation Layers -->
-                <div class="absolute inset-0 flex flex-col items-center justify-center z-30">
-                    <div class="scanning-line" id="scan-line"></div>
-                    <div id="scan-text" class="bg-black/60 backdrop-blur-md px-6 py-3 rounded-full text-white font-medium animate-pulse border border-white/10 shadow-lg">
-                        Identifying Ingredients...
+            <!-- 3. SCANNING UI (Hidden initially) -->
+            <div id="preview-container" class="hidden absolute inset-0 bg-stone-900 z-40 pointer-events-none">
+                <img id="preview-image" src="" class="w-full h-full object-cover opacity-40">
+                <div class="absolute inset-0 flex flex-col items-center justify-center">
+                    <div class="scanning-beam"></div>
+                    <div class="text-center">
+                        <div class="spinner mb-4 mx-auto w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
+                        <span class="text-emerald-400 font-mono text-lg tracking-widest animate-pulse">ANALYZING IMAGE DATA...</span>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- RESULTS SECTION -->
-        <div id="results-section" class="hidden mt-16">
+        <div id="results-section" class="hidden mt-16 pb-20">
             
             <!-- AI Logic Box -->
-            <div class="fade-in bg-gradient-to-r from-emerald-50 to-white border border-emerald-100 p-6 rounded-2xl mb-10 flex flex-col md:flex-row items-start gap-4 shadow-sm">
-                <div class="bg-emerald-100 p-2 rounded-lg text-emerald-700 mt-1 shrink-0">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+            <div class="fade-up bg-white border-l-4 border-emerald-500 shadow-lg p-6 rounded-r-xl mb-10 flex flex-col md:flex-row items-start gap-5 max-w-4xl mx-auto">
+                <div class="bg-emerald-100 p-3 rounded-full text-emerald-700 shrink-0">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
                 </div>
                 <div>
-                    <h3 class="font-bold text-emerald-900 text-lg mb-2">Analysis Complete</h3>
-                    <p class="text-emerald-800 leading-relaxed mb-3" id="ai-reasoning-text">
+                    <h3 class="font-bold text-stone-900 text-xl mb-2">Analysis Result</h3>
+                    <p class="text-stone-700 leading-relaxed" id="ai-reasoning-text">
                         <!-- JS fills this -->
                     </p>
-                    <div class="flex flex-wrap gap-2" id="detected-tags">
+                    <div class="mt-4 flex flex-wrap gap-2" id="detected-tags">
                         <!-- JS fills this -->
                     </div>
                 </div>
             </div>
 
-            <div class="fade-in flex items-end justify-between mb-6 border-b border-stone-200 pb-2">
-                <h2 class="text-3xl font-bold text-stone-800">Generated Recipes</h2>
-                <span class="text-xs font-bold uppercase tracking-wider text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">3 Options Found</span>
-            </div>
+            <h2 class="text-center text-3xl font-bold text-stone-800 mb-8 fade-up">Recommended Actions</h2>
 
             <!-- Cards Grid -->
-            <div class="fade-in grid md:grid-cols-3 gap-8" id="recipe-grid">
+            <div class="grid md:grid-cols-3 gap-6 fade-up" id="recipe-grid">
                 <!-- JS fills this -->
             </div>
         </div>
@@ -144,239 +147,229 @@
     </main>
 
     <!-- FOOTER -->
-    <footer class="text-center py-8 text-stone-400 text-sm border-t border-stone-200 mt-10">
-        &copy; 2024 SnapChef Demo. No images are actually uploaded to a server (Privacy First).
+    <footer class="bg-white border-t border-stone-200 py-8 mt-auto">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-stone-400 text-sm mb-2">&copy; 2025 SnapChef Intelligence.</p>
+            <p class="text-xs text-stone-300">Demo Mode: No images are sent to external servers.</p>
+        </div>
     </footer>
 
-    <!-- RECIPE MODAL OVERLAY -->
-    <div id="recipe-modal" class="fixed inset-0 z-[60] hidden">
-        <!-- Backdrop -->
-        <div class="absolute inset-0 bg-stone-900/60 backdrop-blur-sm transition-opacity duration-300" onclick="closeModal()"></div>
+    <!-- MODAL (Details View) -->
+    <div id="recipe-modal" class="fixed inset-0 z-[100] hidden">
+        <div class="absolute inset-0 bg-stone-900/80 backdrop-blur-sm transition-opacity" onclick="closeModal()"></div>
         
-        <!-- Modal Card -->
         <div class="absolute inset-x-0 bottom-0 md:inset-0 md:flex md:items-center md:justify-center pointer-events-none">
-            <div id="modal-card" class="bg-white w-full md:w-[650px] md:h-[85vh] h-[90vh] md:rounded-2xl rounded-t-2xl shadow-2xl pointer-events-auto flex flex-col overflow-hidden transform transition-all duration-300 translate-y-full md:translate-y-10 opacity-0">
+            <div id="modal-card" class="bg-white w-full md:w-[700px] md:h-[90vh] h-[95vh] md:rounded-2xl rounded-t-2xl shadow-2xl pointer-events-auto flex flex-col overflow-hidden transition-transform duration-300 translate-y-full">
                 
-                <!-- Modal Image Header -->
-                <div class="h-56 bg-emerald-600 relative shrink-0">
+                <!-- Modal Header -->
+                <div class="h-64 bg-stone-200 relative shrink-0">
                     <img id="modal-img" src="" class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent"></div>
                     
-                    <!-- Close Button -->
-                    <button onclick="closeModal()" class="absolute top-4 right-4 bg-black/20 hover:bg-black/40 backdrop-blur-md text-white rounded-full p-2 transition border border-white/20">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    <button onclick="closeModal()" class="absolute top-4 right-4 bg-white/20 hover:bg-white/30 backdrop-blur text-white rounded-full p-2 transition">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                     </button>
                     
-                    <!-- Title Overlay -->
-                    <div class="absolute bottom-5 left-6 text-white right-6">
-                        <span id="modal-badge" class="text-xs font-bold uppercase tracking-wider bg-emerald-500 px-2 py-1 rounded mb-2 inline-block shadow-sm">Category</span>
-                        <h2 id="modal-title" class="text-3xl md:text-4xl font-serif font-bold leading-tight mt-1">Recipe Title</h2>
+                    <div class="absolute bottom-6 left-8 right-8 text-white">
+                        <div class="flex gap-2 mb-2">
+                            <span id="modal-badge" class="text-[10px] font-bold uppercase tracking-widest bg-emerald-500 px-3 py-1 rounded-sm">Category</span>
+                        </div>
+                        <h2 id="modal-title" class="text-3xl md:text-4xl font-serif font-bold leading-none">Title</h2>
                     </div>
                 </div>
 
-                <!-- Modal Scrollable Content -->
-                <div class="p-8 overflow-y-auto no-scrollbar flex-grow bg-white">
-                    
-                    <!-- Stats -->
-                    <div class="flex gap-8 mb-8 border-b border-stone-100 pb-6">
-                        <div>
-                            <span class="block text-2xl font-bold text-stone-800" id="modal-time">20m</span>
-                            <span class="text-xs text-stone-500 uppercase tracking-wide font-semibold">Total Time</span>
+                <!-- Modal Content -->
+                <div class="p-8 overflow-y-auto flex-grow bg-white">
+                    <div class="grid grid-cols-2 gap-4 mb-8 border-b border-stone-100 pb-8">
+                        <div class="text-center p-4 bg-stone-50 rounded-xl">
+                            <span class="block text-xl font-bold text-stone-800" id="modal-time">--</span>
+                            <span class="text-xs text-stone-400 uppercase tracking-widest">Time / Prep</span>
                         </div>
-                        <div>
-                            <span class="block text-2xl font-bold text-stone-800" id="modal-cal">450</span>
-                            <span class="text-xs text-stone-500 uppercase tracking-wide font-semibold">Calories</span>
+                        <div class="text-center p-4 bg-stone-50 rounded-xl">
+                            <span class="block text-xl font-bold text-stone-800" id="modal-cal">--</span>
+                            <span class="text-xs text-stone-400 uppercase tracking-widest">Calories</span>
                         </div>
                     </div>
 
-                    <!-- Ingredients -->
                     <div class="mb-8">
-                        <h4 class="font-bold text-lg mb-3 text-stone-800 flex items-center gap-2">
-                            <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
-                            Shopping List (Missing Items)
-                        </h4>
-                        <ul id="modal-missing" class="bg-stone-50 p-4 rounded-xl space-y-2 text-stone-700 border border-stone-200">
+                        <h4 class="font-bold text-lg mb-4 text-stone-900 uppercase tracking-wide text-sm border-l-4 border-emerald-500 pl-3">Required Items / Ingredients</h4>
+                        <ul id="modal-missing" class="grid grid-cols-1 md:grid-cols-2 gap-2 text-stone-600">
                             <!-- JS Injected -->
                         </ul>
                     </div>
 
-                    <!-- Steps -->
                     <div>
-                        <h4 class="font-bold text-lg mb-3 text-stone-800 flex items-center gap-2">
-                            <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-                            Instructions
-                        </h4>
-                        <ol id="modal-steps" class="space-y-6 relative border-l-2 border-stone-200 ml-3 pl-6">
+                        <h4 class="font-bold text-lg mb-4 text-stone-900 uppercase tracking-wide text-sm border-l-4 border-emerald-500 pl-3">Instructions / Details</h4>
+                        <ol id="modal-steps" class="space-y-4 text-stone-700 leading-relaxed text-lg font-light">
                             <!-- JS Injected -->
                         </ol>
                     </div>
                 </div>
 
-                <!-- Modal Sticky Footer -->
-                <div class="p-5 bg-white border-t border-stone-200 shrink-0">
-                    <button class="w-full bg-emerald-800 hover:bg-emerald-900 text-white font-bold py-4 rounded-xl transition shadow-lg flex justify-center items-center gap-2 text-lg" onclick="closeModal()">
-                        Start Cooking
+                <!-- Modal Footer -->
+                <div class="p-6 bg-stone-50 border-t border-stone-200 shrink-0">
+                    <button class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-4 rounded-xl shadow-lg transition transform hover:scale-[1.01] flex justify-center items-center gap-2" onclick="closeModal()">
+                        Select This Option
                     </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- JAVASCRIPT LOGIC -->
+    <!-- LOGIC -->
     <script>
-        // --- MOCK DATA (Simulating Backend Response) ---
-        const mockDetectedIngredients = ["Spinach (Wilting)", "Tomatoes", "Eggs", "Half Onion", "Cheddar Cheese"];
+        /* 
+           --- DATA SIMULATION ---
+           Designed to work for both contexts (Fridge OR Menu) by using generic visual tags
+           and generating specific outputs.
+        */
+        const mockTags = ["Fresh Greens", "Ripe Tomato", "Proteins Detected", "Menu Text Identified"];
         
-        const recipes = [
+        const resultsData = [
             {
                 id: 1,
-                type: "Quick Snack",
-                title: "Spinach & Tomato Frittata",
-                desc: "A protein-packed snack ready in 10 minutes. Perfect for using up those eggs.",
-                time: "10 mins",
-                cals: "220",
-                image: "https://images.unsplash.com/photo-1590233634125-961d67015893?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-                missing: ["Olive Oil", "Salt & Pepper"],
+                type: "Reduce Waste (Fridge)",
+                title: "Rescue Shakshuka",
+                desc: "Uses your ripe tomatoes and leftover greens before they spoil.",
+                time: "20 mins",
+                cals: "420",
+                image: "https://images.unsplash.com/photo-1590412200988-a436970781fa?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                missing: ["Eggs", "Cumin", "Garlic", "Onion"],
                 steps: [
-                    "Whisk eggs with a splash of water, salt, and pepper.",
-                    "Sauté onions and tomatoes in olive oil until soft.",
-                    "Add spinach and cook until wilted (save it!).",
-                    "Pour eggs over veggies, sprinkle cheese, and cover until set."
+                    "Sauté onions and garlic in olive oil.",
+                    "Add those ripe tomatoes (chopped) and simmer.",
+                    "Stir in the wilting greens until soft.",
+                    "Crack eggs into the sauce, cover, and cook for 5 mins."
                 ],
-                reason: "Good Match",
-                freshnessNote: "Uses your eggs and tomatoes efficiently."
+                reason: "Best for Fridge",
+                freshnessNote: "Utilization: High (Saves 3 items)"
             },
             {
                 id: 2,
-                type: "Healthy Dinner",
-                title: "Warm Spinach & Egg Salad",
-                desc: "Warm salad with caramelized onions and soft boiled egg.",
-                time: "25 mins",
-                cals: "340",
-                image: "https://images.unsplash.com/photo-1533089862017-ec329abb0933?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-                missing: ["Balsamic Vinegar", "Dijon Mustard", "Walnuts"],
+                type: "Healthy Menu Choice",
+                title: "Grilled Salmon & Quinoa",
+                desc: "Identified as the highest protein, lowest sodium option on the menu.",
+                time: "Wait: 15m",
+                cals: "580",
+                image: "https://images.unsplash.com/photo-1467003909585-2f8a7270028d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                missing: ["Salmon Fillet", "Quinoa", "Asparagus", "Lemon"],
                 steps: [
-                    "Boil the eggs to your preference (soft boiled is best).",
-                    "Caramelize onions slowly in a pan.",
-                    "Make a dressing with vinegar and mustard.",
-                    "Toss spinach in the warm pan for 30 seconds to revive it.",
-                    "Top with sliced egg and walnuts."
+                    "Ask for sauce on the side.",
+                    "Swap fries for steamed vegetables.",
+                    "Pair with sparkling water."
                 ],
-                reason: "Best Choice", // Logic flag
-                freshnessNote: "CRITICAL: Your spinach is wilting! The heat in this recipe masks the texture while keeping nutrients."
+                reason: "Best Menu Pick",
+                freshnessNote: "Nutrient Density: Excellent"
             },
             {
                 id: 3,
-                type: "Gourmet Challenge",
-                title: "Classic Shakshuka",
-                desc: "A rich tomato base with poached eggs and spices.",
-                time: "45 mins",
-                cals: "510",
-                image: "https://images.unsplash.com/photo-1590412200988-a436970781fa?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-                missing: ["Cumin", "Paprika", "Garlic", "Crusty Bread"],
+                type: "Quick Snack",
+                title: "Caprese Salad",
+                desc: "Simple, elegant, and uses the fresh produce detected.",
+                time: "5 mins",
+                cals: "250",
+                image: "https://images.unsplash.com/photo-1529312266912-b33cf6227e24?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                missing: ["Mozzarella", "Basil", "Balsamic Glaze"],
                 steps: [
-                    "Dice onions and sauté with garlic.",
-                    "Add chopped tomatoes and spices (cumin, paprika). Simmer for 20 mins.",
-                    "Stir in spinach.",
-                    "Create wells in sauce and crack eggs into them.",
-                    "Cover and simmer until whites are set.",
-                    "Serve with crusty bread."
+                    "Slice tomatoes and mozzarella evenly.",
+                    "Layer on a plate with fresh basil leaves.",
+                    "Drizzle with olive oil and balsamic.",
+                    "Season with sea salt."
                 ],
-                reason: "Advanced",
-                freshnessNote: "Excellent use of ripe tomatoes."
+                reason: "Fastest",
+                freshnessNote: "Freshness: Peak"
             }
         ];
 
-        // --- DOM ELEMENT REFERENCES ---
+        // --- ELEMENTS ---
         const fileInput = document.getElementById('file-input');
         const uploadUI = document.getElementById('upload-ui');
         const previewContainer = document.getElementById('preview-container');
         const previewImage = document.getElementById('preview-image');
-        const scanLine = document.getElementById('scan-line');
-        const scanText = document.getElementById('scan-text');
-        
         const resultsSection = document.getElementById('results-section');
         const recipeGrid = document.getElementById('recipe-grid');
-        const aiReasoningText = document.getElementById('ai-reasoning-text');
-        const detectedTags = document.getElementById('detected-tags');
-        
-        // Modal references
-        const modal = document.getElementById('recipe-modal');
-        const modalCard = document.getElementById('modal-card');
-        const modalTitle = document.getElementById('modal-title');
-        const modalImg = document.getElementById('modal-img');
-        const modalBadge = document.getElementById('modal-badge');
-        const modalTime = document.getElementById('modal-time');
-        const modalCal = document.getElementById('modal-cal');
-        const modalMissing = document.getElementById('modal-missing');
-        const modalSteps = document.getElementById('modal-steps');
+        const aiReasoning = document.getElementById('ai-reasoning-text');
+        const tagsContainer = document.getElementById('detected-tags');
 
-        // --- CORE FUNCTIONS ---
-
-        /** 
-         * 1. TRIGGER UPLOAD 
-         * This forces the hidden file input to open when the div is clicked.
-         * Crucial for UI styling.
-         */
-        function triggerUpload() {
-            fileInput.click();
-        }
-
-        /**
-         * 2. HANDLE FILE SELECTION
-         * Detects file, reads it locally (FileReader), and starts simulation.
-         */
+        // --- MAIN LISTENER (The only one needed) ---
         fileInput.addEventListener('change', function(e) {
             if (this.files && this.files[0]) {
                 const file = this.files[0];
                 
-                // Read the file locally to show preview
+                // 1. Show Preview
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     previewImage.src = e.target.result;
                     
-                    // Show scanning UI
-                    uploadUI.classList.add('hidden');
+                    // Hide Upload Text, Show Scanning Animation
+                    uploadUI.classList.add('opacity-0'); 
                     previewContainer.classList.remove('hidden');
                     
-                    // Begin AI Simulation
-                    simulateAnalysis();
+                    // Start Simulation
+                    startScanning();
                 }
                 reader.readAsDataURL(file);
             }
         });
 
-        /**
-         * 3. SIMULATE AI ANALYSIS
-         * Fakes a 2.5s delay then renders results.
-         */
-        function simulateAnalysis() {
-            // Scroll user slightly down to indicate activity
-            window.scrollTo({ top: 150, behavior: 'smooth' });
+        // --- LOGIC FUNCTIONS ---
+        function startScanning() {
+            // Scroll to center
+            previewContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
+            // Simulate AI Processing Time (3 seconds)
             setTimeout(() => {
-                // Stop Animation UI
-                scanLine.style.display = 'none';
-                scanText.innerText = "Scan Complete";
-                scanText.classList.remove('animate-pulse');
-                scanText.classList.add('bg-emerald-600');
-
-                // Render Data
-                renderResults();
-            }, 2500);
+                showResults();
+            }, 3000);
         }
 
-        /**
-         * 4. RENDER RESULTS
-         * Injects HTML for reasoning and recipe cards.
-         */
-        function renderResults() {
+        function showResults() {
+            // Hide animation
+            previewContainer.classList.add('hidden');
+            uploadUI.classList.remove('opacity-0'); // Reset UI in case they want to upload again
+            
+            // Show Results Area
             resultsSection.classList.remove('hidden');
             
-            // 1. Fill Reasoning Text
-            aiReasoningText.innerHTML = `I've analyzed your upload. <strong class="text-emerald-700">The spinach appears to be wilting (approx 2 days left)</strong>, so I've prioritized recipes that use it immediately. Your tomatoes and eggs are in prime condition.`;
+            // Set Text
+            aiReasoning.innerHTML = `Scanning complete. I've analyzed the image structure. <br><br>If this is a <strong>Fridge</strong>, I see <span class="text-emerald-600 font-bold">Tomatoes and Greens</span> that need to be used.<br>If this is a <strong>Menu</strong>, I've highlighted the <span class="text-emerald-600 font-bold">Salmon & Quinoa</span> as the balanced choice.`;
 
-            // 2. Fill Tags
-            detectedTags.innerHTML = mockDetectedIngredients.map(tag => 
-                `<span class="bg-white border border-stone-200 text-stone-600 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider sha
-               
+            // Set Tags
+            tagsContainer.innerHTML = mockTags.map(tag => 
+                `<span class="bg-stone-100 text-stone-600 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider border border-stone-200">${tag}</span>`
+            ).join('');
+
+            // Generate Cards
+            recipeGrid.innerHTML = resultsData.map(item => {
+                const isHighlight = item.reason.includes("Best");
+                const borderClass = isHighlight ? "border-emerald-500 ring-4 ring-emerald-50" : "border-stone-200";
+                
+                return `
+                <div onclick="openModal(${item.id})" class="bg-white rounded-2xl shadow-md overflow-hidden border ${borderClass} hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 cursor-pointer flex flex-col group">
+                    <div class="h-48 overflow-hidden relative">
+                        <img src="${item.image}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                        <div class="absolute top-3 left-3 bg-white/90 backdrop-blur px-2 py-1 rounded text-xs font-bold text-stone-800 shadow-sm">
+                            ${item.type}
+                        </div>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-bold text-xl text-stone-800 leading-tight">${item.title}</h3>
+                        </div>
+                        <p class="text-stone-500 text-sm mb-4 line-clamp-2">${item.desc}</p>
+                        
+                        <div class="mt-auto pt-4 border-t border-stone-100 flex justify-between items-center text-sm font-medium text-stone-400">
+                            <span>${item.time}</span>
+                            <span class="text-emerald-600 group-hover:underline">View Details &rarr;</span>
+                        </div>
+                    </div>
+                </div>
+                `;
+            }).join('');
+
+            // Scroll to results
+            resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // --- MODAL FUNCTIONS ---
+        const modal = document
