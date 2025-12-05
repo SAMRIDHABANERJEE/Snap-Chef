@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SnapChef | Reduce Waste, Eat Well</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom aesthetics for the "Whole Foods meets Tech" vibe */
+        :root {
+            --primary-green: #059669;
+            --cream-bg: #FAFAF9;
+            --dark-text: #1C1917;
+        }
+        body {
+            background-color: var(--cream-bg);
+            font-family: 'DM Sans', sans-serif;
+            color: var(--dark-text);
+        }
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+        }
+        .fade-in {
+            animation: fadeIn 0.8s ease-in-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .scanning-line {
+            width: 100%;
+            height: 2px;
+            background: #10B981;
+            position: absolute;
+            top: 0;
+            left: 0;
+            animation: scan 2s infinite linear;
+            box-shadow: 0 0 8px #10B981;
+        }
+        @keyframes scan {
+            0% { top: 0%; opacity: 0; }
+            50% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+        /* Hide scrollbar for clean modal */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Navigation -->
+    <nav class="w-full px-6 py-4 flex justify-between items-center bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-stone-200">
+        <div class="flex items-center gap-2">
+            <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+            <span class="text-xl font-bold tracking-tight text-emerald-800">SnapChef</span>
+        </div>
+        <div class="text-sm font-medium text-stone-500">Your Eco-Kitchen Assistant</div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto px-4 py-8 max-w-4xl">
+        
+        <!-- Header Section -->
+        <header class="text-center mb-10">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4 text-emerald-900">Don't waste it. Taste it.</h1>
+            <p class="text-lg text-stone-600 max-w-xl mx-auto">Upload a photo of your fridge or pantry. Our AI identifies ingredients, checks freshness, and builds recipes instantly.</p>
+        </header>
+
+        <!-- Upload Section -->
+        <div id="upload-container" class="bg-white rounded-3xl shadow-xl border-2 border-dashed border-stone-300 p-10 text-center hover:border-emerald-500 transition-colors cursor-pointer relative overflow-hidden group">
+            <input type="file" id="file-input" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" accept="image/*">
+            
+            <div id="upload-ui" class="group-hover:scale-105 transition-transform duration-300">
+                <div class="bg-emerald-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-emerald-600">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                </div>
+                <h3 class="text-xl font-semibold text-stone-800">Upload Photo</h3>
+                <p class="text-stone-500 mt-2">Tap to browse or drag & drop</p>
+            </div>
+
+            <!-- Preview Image & Scanning Animation (Hidden initially) -->
+            <div id="preview-container" class="hidden absolute inset-0 bg-stone-900 z-0">
+                <img id="preview-image" src="" class="w-full h-full object-cover opacity-60" alt="Fridge Content">
+                <div class="absolute inset-0 flex flex-col items-center justify-center z-20">
+                    <div class="scanning-line"></div>
+                    <div class="bg-black/50 backdrop-blur-sm px-6 py-3 rounded-full text-white font-medium animate-pulse border border-white/20">
+                        Analyzing Ingredients...
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analysis & Results Section -->
+        <div id="results-section" class="hidden mt-12 fade-in">
+            
+            <!-- AI Logic Breakdown -->
+            <div class="bg-emerald-50 border border-emerald-100 p-6 rounded-2xl mb-8 flex items-start gap-4">
+                <div class="bg-emerald-100 p-2 rounded-lg text-emerald-600 mt-1 shrink-0">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                </div>
+                <div>
+                    <h3 class="font-bold text-emerald-900 text-lg">SnapChef Logic</h3>
+                    <p class="text-emerald-800 mt-1" id="ai-reasoning-text">
+                        <!-- Populated by JS -->
+                    </p>
+                    <div class="mt-3 flex flex-wrap gap-2" id="detected-tags">
+                        <!-- Tags populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="text-2xl font-bold mb-6 text-stone-800 flex items-center gap-2">
+                Curated For You
+                <span class="text-xs font-normal bg-stone-200 text-stone-600 px-2 py-1 rounded-full">Based on freshness</span>
+            </h2>
+
+            <!-- Cards Grid -->
+            <div class="grid md:grid-cols-3 gap-6" id="recipe-grid">
+                <!-- Cards injected here -->
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-6 text-stone-400 text-sm">
+        &copy; 2023 SnapChef. Helping you save the planet, one meal at a time.
+    </footer>
+
+    <!-- Recipe Modal -->
+    <div id="recipe-modal" class="fixed inset-0 z-[100] hidden">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onclick="closeModal()"></div>
+        
+        <!-- Modal Content -->
+        <div class="absolute inset-x-0 bottom-0 md:inset-0 md:flex md:items-center md:justify-center pointer-events-none">
+            <div class="bg-white w-full md:w-[600px] md:h-[80vh] h-[85vh] md:rounded-2xl rounded-t-2xl shadow-2xl pointer-events-auto flex flex-col overflow-hidden transform transition-transform duration-300 translate-y-full md:translate-y-0 scale-95 md:scale-100" id="modal-card">
+                
+                <!-- Modal Header -->
+                <div class="h-48 bg-emerald-600 relative shrink-0">
+                    <img id="modal-img" src="" class="w-full h-full object-cover opacity-90">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                    <button onclick="closeModal()" class="absolute top-4 right-4 bg-white/20 hover:bg-white/40 backdrop-blur-md text-white rounded-full p-2 transition">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                    <div class="absolute bottom-4 left-6 text-white">
+                        <span id="modal-badge" class="text-xs font-bold uppercase tracking-wider bg-emerald-500 px-2 py-1 rounded mb-2 inline-block">Category</span>
+                        <h2 id="modal-title" class="text-3xl font-serif font-bold">Recipe Title</h2>
+                    </div>
+                </div>
+
+                <!-- Modal Body (Scrollable) -->
+                <div class="p-8 overflow-y-auto no-scrollbar flex-grow bg-stone-50">
+                    <div class="flex gap-4 mb-6 border-b border-stone-200 pb-4">
+                        <div class="text-center">
+                            <span class="block text-xl font-bold text-stone-800" id="modal-time">20m</span>
+                            <span class="text-xs text-stone-500 uppercase">Time</span>
+                        </div>
+                        <div class="w-px bg-stone-200"></div>
+                        <div class="text-center">
+                            <span class="block text-xl font-bold text-stone-800" id="modal-cal">450</span>
+                            <span class="text-xs text-stone-500 uppercase">Cals</span>
+                        </div>
+                    </div>
+
+                    <h4 class="font-bold text-lg mb-3">Shopping List (Missing)</h4>
+                    <ul id="modal-missing" class="list-disc list-inside text-stone-600 mb-6 space-y-1 bg-white p-4 rounded-xl border border-stone-200">
+                        <!-- Items -->
+                    </ul>
+
+                    <h4 class="font-bold text-lg mb-3">Instructions</h4>
+                    <ol id="modal-steps" class="space-y-4 text-stone-700 leading-relaxed">
+                        <!-- Steps -->
+                    </ol>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="p-4 bg-white border-t border-stone-200 shrink-0">
+                    <button class="w-full bg-emerald-800 hover:bg-emerald-900 text-white font-bold py-3 rounded-xl transition shadow-lg flex justify-center items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Start Cooking Mode
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- DATA MOCKUP --- 
+        // In a real app, this data comes from the AI API based on visual analysis.
+        const mockDetectedIngredients = ["Spinach (Wilting)", "Tomatoes", "Eggs", "Half Onion", "Cheddar Cheese"];
+        
+        const recipes = [
+            {
+                id: 1,
+                type: "Quick Snack",
+                title: "Spinach & Tomato Frittata",
+                desc: "A protein-packed snack ready in 10 minutes.",
+                time: "10 mins",
+                cals: "220",
+                image: "https://images.unsplash.com/photo-1482049016688-2d3e1b311543?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                missing: ["Olive Oil", "Salt & Pepper"],
+                steps: [
+                    "Whisk eggs with a splash of water, salt, and pepper.",
+                    "Sauté onions and tomatoes in olive oil until soft.",
+                    "Add spinach and cook until wilted (save it!).",
+                    "Pour eggs over veggies, sprinkle cheese, and cover until set."
+                ],
+                reason: "Good",
+                freshnessNote: "Uses your eggs and tomatoes."
+            },
+            {
+                id: 2,
+                type: "Healthy Dinner",
+                title: "Wilted Spinach Salad",
+                desc: "Warm salad with caramelized onions and egg.",
+                time: "25 mins",
+                cals: "340",
+                image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                missing: ["Balsamic Vinegar", "Dijon Mustard", "Walnuts"],
+                steps: [
+                    "Boil the eggs to your preference (soft boiled is best).",
+                    "Caramelize onions slowly in a pan.",
+                    "Make a dressing with vinegar and mustard.",
+                    "Toss spinach in the warm pan for 30 seconds to revive it.",
+                    "Top with sliced egg and walnuts."
+                ],
+                reason: "Best Choice", // AI logic flag
+                freshnessNote: "CRITICAL: Your spinach is wilting! This recipe uses heat to mask the texture while keeping nutrients."
+            },
+            {
+                id: 3,
+                type: "Gourmet Challenge",
+                title: "Shakshuka with Spinach",
+                desc: "A rich tomato base with poached eggs.",
+                time: "45 mins",
+                cals: "510",
+                image: "https://images.unsplash.com/photo-1590412200988-a436970781fa?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                missing: ["Cumin", "Paprika", "Garlic", "Crusty Bread"],
+                steps: [
+                    "Dice onions and sauté with garlic.",
+                    "Add chopped tomatoes and spices (cumin, paprika). Simmer for 20 mins.",
+                    "Stir in spinach.",
+                    "Create wells in sauce and crack eggs into them.",
+                    "Cover and simmer until whites are set.",
+                    "Serve with crusty bread."
+                ],
+                reason: "Advanced",
+                freshnessNote: "Great use of ripe tomatoes."
+            }
+        ];
+
+        // --- DOM ELEMENTS ---
+        const fileInput = document.getElementById('file-input');
+        const uploadUI = document.getElementById('upload-ui');
+        const previewContainer = document.getElementById('preview-container');
+        const previewImage = document.getElementById('preview-image');
+        const resultsSection = document.getElementById('results-section');
+        const recipeGrid = document.getElementById('recipe-grid');
+        const aiReasoningText = document.getElementById('ai-reasoning-text');
+        const detectedTags = document.getElementById('detected-tags');
+        
+        // Modal Elements
+        const modal = document.getElementById('recipe-modal');
+        const modalCard = document.getElementById('modal-card');
+        const modalTitle = document.getElementById('modal-title');
+        const modalImg = document.getElementById('modal-img');
+        const modalBadge = document.getElementById('modal-badge');
+        const modalTime = document.getElementById('modal-time');
+        const modalCal = document.getElementById('modal-cal');
+        const modalMissing = document.getElementById('modal-missing');
+        const modalSteps = document.getElementById('modal-steps');
+
+        // --- EVENT LISTENERS ---
+
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                // 1. Show Preview
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImage.src = e.target.result;
+                    uploadUI.classList.add('hidden');
+                    previewContainer.classList.remove('hidden');
+                    
+                    // 2. Start Simulation
+                    simulateAnalysis();
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // --- FUNCTIONS ---
+
+        function simulateAnalysis() {
+            // Scroll slightly
+            window.scrollTo({ top: 100, behavior: 'smooth' });
+
+            // Simulate 2.5 seconds of "AI Processing"
+            setTimeout(() => {
+                renderResults();
+                // Stop animation visuals
+                document.querySelector('.scanning-line').style.display = 'none';
+                document.querySelector('.animate-pulse').innerHTML = "Scan Complete";
+                document.querySelector('.animate-pulse').classList.remove('animate-pulse');
+            }, 2500);
+        }
+
+        function renderResults() {
+            resultsSection.classList.remove('hidden');
+            
+            // Populate Reasoning
+            aiReasoningText.innerHTML = `I've analyzed your fridge. <strong class="text-emerald-700">The spinach looks a bit droopy</strong>, so we should prioritize that. Your tomatoes are perfectly ripe. Here is my logic:`;
+
+            // Populate Tags
+            detectedTags.innerHTML = mockDetectedIngredients.map(tag => 
+                `<span class="bg-white border border-stone-200 text-stone-600 px-3 py-1 rounded-full text-sm font-medium shadow-sm">${tag}</span>`
+            ).join('');
+
+            // Populate Cards
+            recipeGrid.innerHTML = recipes.map(recipe => {
+                const isBest = recipe.reason === "Best Choice";
+                const borderClass = isBest ? "border-emerald-500 ring-4 ring-emerald-50" : "border-stone-200";
+                const badge = isBest ? `<div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md z-10">RECOMMENDED</div>` : "";
+                
+                return `
+                <div onclick="openModal(${recipe.id})" class="bg-white rounded-2xl shadow-lg overflow-hidden border ${borderClass} relative cursor-pointer hover:shadow-2xl transition-all hover:-translate-y-1 group">
+                    ${badge}
+                    <div class="h-48 overflow-hidden relative">
+                        <img src="${recipe.image}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="${recipe.title}">
+                        <div class="absolute bottom-2 left-2 bg-black/60 backdrop-blur-md text-white text-xs font-bold px-2 py-1 rounded">
+                            ${recipe.type}
+                        </div>
+                    </div>
+                    <div class="p-5">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-bold text-xl text-stone-800 leading-tight">${recipe.title}</h3>
+                        </div>
+                        <p class="text-stone-500 text-sm mb-4 line-clamp-2">${recipe.desc}</p>
+                        
+                        <div class="bg-stone-50 p-3 rounded-lg mb-4">
+                            <p class="text-xs font-bold text-emerald-700 mb-1 flex items-center gap-1">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                                AI Insight:
+                            </p>
+                            <p class="text-xs text-stone-600 italic">"${recipe.freshnessNote}"</p>
+                        </div>
+
+                        <div class="flex items-center justify-between text-sm text-stone-400 font-medium">
+                            <span class="flex items-center gap-1">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                ${recipe.time}
+                            </span>
+               
