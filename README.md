@@ -6,7 +6,7 @@
 
 SnapChef is an intelligent web application that leverages AI-powered image recognition to analyze food ingredients and restaurant menus instantly. With a simple photo, transform the way you cook and make dining decisions.
 
-🌐 **Live Demo:** [https://newtothecodingworldsamridha.github.io/Snap-Chef/](https://newtothecodingworldsamridha.github.io/Snap-Chef/)
+🌐 **Live Demo:** [https://samridhabanerjee.github.io/Snap-Chef/](https://samridhabanerjee.github.io/Snap-Chef/)
 
 ---
 
