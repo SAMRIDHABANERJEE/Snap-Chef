@@ -105,13 +105,13 @@ According to global studies, household food waste is a significant contributor t
 ### For Users
 Simply visit the live demo and start scanning! No installation or sign-up required.
 
-**Live App:** [https://newtothecodingworldsamridha.github.io/Snap-Chef/](https://newtothecodingworldsamridha.github.io/Snap-Chef/)
+**Live App:** [https://samridhabanerjee.github.io/Snap-Chef/](https://samridhabanerjee.github.io/Snap-Chef/)
 
 ### For Developers
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/NewtothecodingworldSamridha/Snap-Chef.git
+git clone https://github.com/samridhabanerjee/Snap-Chef.git
 cd Snap-Chef
 ```
 
@@ -164,7 +164,7 @@ This project is open source and available for educational and demonstration purp
 ## 👨‍💻 Developer
 
 **Samridha**
-- GitHub: [@NewtothecodingworldSamridha](https://github.com/NewtothecodingworldSamridha)
+- GitHub: [@samridhabanerjee](https://github.com/samridhabanerjee)
 
 ---
 
